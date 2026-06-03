@@ -1,0 +1,21 @@
+name: KMeans-Womens-Shoes
+
+conda_env: conda.yaml
+
+entry_points:
+  main:
+    parameters:
+      k_optimal:
+        type: int
+        default: 4
+      random_state:
+        type: int
+        default: 42
+      data_path:
+        type: str
+        default: "data/Womens_Shoes_Clean.csv"
+    command: >
+      python modelling.py
+        --k_optimal {k_optimal}
+        --random_state {random_state}
+        --data_path {data_path}

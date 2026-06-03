@@ -1,0 +1,58 @@
+name: CI - MLflow Re-Training
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'MLProject/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'MLProject/**'
+  workflow_dispatch:
+    inputs:
+      k_optimal:
+        description: 'Jumlah cluster K'
+        required: false
+        default: '4'
+      random_state:
+        description: 'Random state'
+        required: false
+        default: '42'
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install mlflow==3.12.0 pandas numpy scikit-learn matplotlib
+
+      - name: Run MLflow Project
+        env:
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+        run: |
+          mlflow run MLProject \
+            -P k_optimal=${{ github.event.inputs.k_optimal || '4' }} \
+            -P random_state=${{ github.event.inputs.random_state || '42' }} \
+            --env-manager=local
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: training-artifacts
+          path: |
+            MLProject/elbow_plot.png
+            MLProject/kmeans_pca.png
+            MLProject/hasil_clustering.csv
