@@ -34,6 +34,14 @@ DATA_PATH           = args.data_path
 
 mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
 
+# ── Autolog ───────────────────────────────────────────────────────────────────
+mlflow.sklearn.autolog(
+    log_input_examples=True,
+    log_model_signatures=True,
+    log_models=True,
+    silent=True
+)
+
 
 # ── 1. Load Data ──────────────────────────────────────────────────────────────
 print("Membaca dataset...")
@@ -212,14 +220,6 @@ with mlflow.start_run(run_name=f"kmeans_k{K_OPTIMAL}") as run:
     mlflow.log_artifact(elbow_path,  artifact_path="plots")
     mlflow.log_artifact(pca_path,    artifact_path="plots")
     mlflow.log_artifact(csv_path,    artifact_path="outputs")
-
-    # ── Log model sklearn
-    mlflow.sklearn.log_model(
-        sk_model       = km,
-        artifact_path  = "model",
-        registered_model_name = "KMeans-Womens-Shoes",
-        input_example  = X_scaled[:5],
-    )
 
     run_id = run.info.run_id
     print(f"\nRun selesai!")
