@@ -14,8 +14,4 @@ entry_points:
       data_path:
         type: str
         default: "data/Womens_Shoes_Clean.csv"
-    command: >
-      python modelling.py
-        --k_optimal {k_optimal}
-        --random_state {random_state}
-        --data_path {data_path}
+    command: "python modelling.py --k_optimal {k_optimal} --random_state {random_state} --data_path {data_path}"

@@ -33,7 +33,6 @@ RANDOM_STATE        = args.random_state
 DATA_PATH           = args.data_path
 
 mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
-mlflow.set_experiment(EXPERIMENT_NAME)
 
 
 # ── 1. Load Data ──────────────────────────────────────────────────────────────
