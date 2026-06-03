@@ -1,4 +1,5 @@
 import os
+import argparse
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -17,11 +18,19 @@ from sklearn.decomposition import PCA
 import mlflow
 import mlflow.sklearn
 
+# ── Argument Parser (untuk MLflow Project) ───────────────────────────────────
+parser = argparse.ArgumentParser()
+parser.add_argument("--k_optimal",    type=int,   default=4)
+parser.add_argument("--random_state", type=int,   default=42)
+parser.add_argument("--data_path",    type=str,   default="data/Womens_Shoes_Clean.csv")
+args = parser.parse_args()
+
 # ── Konfigurasi MLflow ────────────────────────────────────────────────────────
-MLFLOW_TRACKING_URI = "http://127.0.0.1:5000"
+MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", "http://127.0.0.1:5000")
 EXPERIMENT_NAME     = "KMeans-Womens-Shoes"
-K_OPTIMAL           = 4
-RANDOM_STATE        = 42
+K_OPTIMAL           = args.k_optimal
+RANDOM_STATE        = args.random_state
+DATA_PATH           = args.data_path
 
 mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
 mlflow.set_experiment(EXPERIMENT_NAME)
@@ -29,7 +38,7 @@ mlflow.set_experiment(EXPERIMENT_NAME)
 
 # ── 1. Load Data ──────────────────────────────────────────────────────────────
 print("Membaca dataset...")
-df = pd.read_csv("data/Womens_Shoes_Clean.csv")
+df = pd.read_csv(DATA_PATH)
 print(f"Shape: {df.shape}")
 
 
